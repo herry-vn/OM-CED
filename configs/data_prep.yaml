@@ -1,14 +1,14 @@
 dataset:
   hf_path: "HuggingFaceFW/fineweb-edu"
-  hf_config: "sample-10BT"       # Dùng bản sample-10BT để khởi tạo stream nhanh trên HF Hub
+  hf_config: "sample-10BT"        # Dùng bản sample-10BT để khởi tạo stream nhanh trên HF Hub
   text_column: "text"
-  tokenizer_train_docs: 25000    # Số văn bản dùng để học từ vựng BPE (~20M-25M tokens, chạy mất ~10s)
-  val_target_tokens: 5000000     # 5M tokens cho tập validation
-  train_target_tokens: 300000000 # Giới hạn 300M tokens cho tập train (tăng/giảm tùy ý)
-  batch_docs: 1000               # Số văn bản gom mỗi lần tokenize song song
+  tokenizer_train_docs: 50000     # Số văn bản dùng để học từ vựng BPE (~40M-50M tokens, chạy mất ~20s)
+  val_target_tokens: 1000000      # 1M tokens cho tập validation
+  train_target_tokens: 1000000000 # Giới hạn 1B tokens cho tập train (tăng/giảm tùy ý)
+  batch_docs: 1000                # Số văn bản gom mỗi lần tokenize song song
 
 tokenizer:
-  vocab_size: 8192               # Bội số của 64 (2^13), tối ưu cho Tensor Core GPU L4
+  vocab_size: 8192                # Bội số của 64 (2^13), tối ưu cho Tensor Core GPU L4
   min_frequency: 2
   special_tokens:
     - "<|pad|>"
