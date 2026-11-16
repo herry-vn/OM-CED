@@ -1,3 +1,4 @@
+import os
 import itertools
 import time
 from pathlib import Path
@@ -9,7 +10,8 @@ from tokenizers import Tokenizer, decoders, models, pre_tokenizers, processors, 
 
 def get_text_stream(hf_path: str, hf_config: str, text_col: str, skip_docs: int = 0) -> Iterator[str]:
     """Stream văn bản trực tiếp từ Hugging Face mà không tải toàn bộ dataset về đĩa."""
-    ds = load_dataset(hf_path, name=hf_config, split="train", streaming=True)
+    token = os.environ.get("HF_TOKEN")
+    ds = load_dataset(hf_path, name=hf_config, split="train", streaming=True, token=token)
     if skip_docs > 0:
         ds = ds.skip(skip_docs)
     for row in ds:

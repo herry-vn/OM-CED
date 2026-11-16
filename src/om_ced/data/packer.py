@@ -1,3 +1,4 @@
+import os
 import itertools
 from pathlib import Path
 from typing import Iterator, List
@@ -5,6 +6,7 @@ from typing import Iterator, List
 import numpy as np
 import yaml
 from tokenizers import Tokenizer
+from huggingface_hub import HfApi, snapshot_download
 from tqdm import tqdm
 
 from om_ced.data.tokenizer import get_text_stream, load_tokenizer
@@ -92,6 +94,41 @@ def run_sanity_check(artifact_dir: Path, tokenizer: Tokenizer) -> None:
     print(f"Độ dài văn bản #0: {end - start} tokens | ID đầu: {sample_ids[0]}, ID cuối: {sample_ids[-1]}")
     print(f"Nội dung giải mã (250 ký tự đầu):\n{decoded_text[:250]!r}")
     print("-----------------------------------------------------\n")
+
+
+def push_artifacts_to_hf(artifact_dir: Path, repo_id: str, path_in_repo: str) -> None:
+    """Đẩy toàn bộ tokenizer.json, *.bin, *.idx, meta.yaml lên Private HF Dataset repo."""
+    token = os.environ.get("HF_TOKEN")
+    if not token:
+        raise EnvironmentError("Thiếu biến môi trường HF_TOKEN. Hãy kiểm tra lại file .env.")
+
+    api = HfApi(token=token)
+    api.create_repo(repo_id=repo_id, repo_type="dataset", private=True, exist_ok=True)
+
+    print(f"[HF Hub] Đang upload {artifact_dir} -> hf://datasets/{repo_id}/{path_in_repo} ...")
+    api.upload_folder(
+        folder_path=str(artifact_dir),
+        repo_id=repo_id,
+        repo_type="dataset",
+        path_in_repo=path_in_repo,
+    )
+    print("[HF Hub] Upload hoàn tất!")
+
+
+def pull_artifacts_from_hf(artifact_dir: Path, repo_id: str, path_in_repo: str) -> None:
+    """Tải dữ liệu đã đóng gói từ HF Hub về artifacts/data/ trên máy mới hoặc Colab."""
+    token = os.environ.get("HF_TOKEN")
+    artifact_dir.parent.mkdir(parents=True, exist_ok=True)
+
+    print(f"[HF Hub] Đang tải hf://datasets/{repo_id}/{path_in_repo} -> {artifact_dir} ...")
+    snapshot_download(
+        repo_id=repo_id,
+        repo_type="dataset",
+        allow_patterns=f"{path_in_repo}/*",
+        local_dir=str(artifact_dir.parent),
+        token=token,
+    )
+    print("[HF Hub] Tải dữ liệu hoàn tất!")
 
 
 def prepare_splits(cfg: dict) -> None:
