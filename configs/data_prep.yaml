@@ -18,3 +18,7 @@ tokenizer:
 
 output:
   artifact_dir: "data/artifacts/fineweb_edu_8k"
+
+hub:
+  repo_id: "BaoMinhTran/CED-FineWeb-Edu"
+  path_in_repo: "fineweb_edu_8k"
