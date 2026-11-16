@@ -17,7 +17,7 @@ tokenizer:
     - "<|unk|>"
 
 output:
-  artifact_dir: "data/artifacts/fineweb_edu_8k"
+  artifact_dir: "artifacts/data/fineweb_edu_8k"
 
 hub:
   repo_id: "BaoMinhTran/CED-FineWeb-Edu"
