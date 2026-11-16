@@ -1,0 +1,24 @@
+dataset:
+  hf_path: "HuggingFaceFW/fineweb-edu"
+  hf_config: "sample-10BT"
+  text_column: "text"
+  tokenizer_train_docs: 500
+  val_target_tokens: 50000
+  train_target_tokens: 200000
+  batch_docs: 250
+
+tokenizer:
+  vocab_size: 8192
+  min_frequency: 2
+  special_tokens:
+    - "<|pad|>"
+    - "<|bos|>"
+    - "<|eos|>"
+    - "<|unk|>"
+
+output:
+  artifact_dir: "artifacts/data/fineweb_test_8k"
+
+hub:
+  repo_id: "BaoMinhTran/CED-FineWeb-Edu"
+  path_in_repo: "fineweb_test_8k"   # Khớp với tên thư mục con trong artifacts/data/
