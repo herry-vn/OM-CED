@@ -7,7 +7,7 @@ import yaml
 from tokenizers import Tokenizer
 from tqdm import tqdm
 
-from ced.data.tokenizer import get_text_stream, load_tokenizer
+from om_ced.data.tokenizer import get_text_stream, load_tokenizer
 
 
 def write_split_to_bin_idx(
